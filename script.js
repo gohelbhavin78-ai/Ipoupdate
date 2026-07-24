@@ -164,3 +164,71 @@ function setupActionButtons() {
     window.open(whatsappUrl, "_blank");
   });
 }
+
+
+
+// 1. Set default fallback data or leave empty
+let CURRENT_IPO = {
+  name: "Loading...",
+  category: "",
+  description: "",
+  details: [],
+  highlights: []
+};
+
+// 2. Define your URL endpoint here
+const IPO_DATA_URL = "https://ipowatch.in/indo-mim-ipo-gmp-grey-market-premium/";
+
+// 3. Fetch data dynamically on load
+document.addEventListener("DOMContentLoaded", async () => {
+  renderBranding();
+  renderServices();
+  
+  // Show loading state initially
+  renderIpoDetails();
+
+  // Auto-fetch data from your link
+  await fetchIpoData(IPO_DATA_URL);
+
+  setupActionButtons();
+});
+
+// Function to fetch and update the IPO data
+async function fetchIpoData(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const data = await response.json();
+
+    // Map fetched data into CURRENT_IPO structure
+    CURRENT_IPO = {
+      name: data.name || "N/A",
+      category: data.category || "Mainboard IPO",
+      description: data.description || "",
+      details: [
+        { label: "Bidding Dates", value: data.biddingDates || "TBA" },
+        { label: "Price Band", value: data.priceBand || "TBA" },
+        { label: "Issue Size", value: data.issueSize || "TBA" },
+        { label: "Lot Size", value: data.lotSize || "TBA" },
+        { label: "Listing On", value: data.listingOn || "BSE & NSE" },
+        { label: "Expected Listing", value: data.expectedListing || "TBA" },
+        { label: "Retail Quota", value: data.retailQuota || "35%" },
+        { label: "Est. Listing Gain", value: data.estListingGain || "N/A", isHighlight: true }
+      ],
+      highlights: data.highlights || []
+    };
+
+    // Re-render the UI with fresh data
+    renderIpoDetails();
+    
+    // Update the WhatsApp CTA link with the new IPO name
+    renderBranding();
+
+  } catch (error) {
+    console.error("Failed to fetch IPO details:", error);
+    // Optionally display an error message on the page
+  }
+}
