@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bhavinkumar Gohel | AMFI-registered Mutual Fund Distributor - 326820</title>
+  <title>IPO Data Entry | Admin Panel</title>
 
   <!-- Google Font: Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,119 +15,169 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- html2canvas Library for Export as PNG -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-  <!-- Action Bar (Hidden on Print/Export) -->
-  <div class="action-bar no-export">
-    <div class="action-container">
-      <button id="downloadBtn" class="action-btn btn-primary">
-        <i class="fa-solid fa-download"></i> Download PNG
-      </button>
-      <button id="copyBtn" class="action-btn btn-secondary">
-        <i class="fa-solid fa-copy"></i> Copy Details
-      </button>
-      <button id="shareWhatsappBtn" class="action-btn btn-whatsapp">
-        <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
-      </button>
-    </div>
-  </div>
-
-  <!-- Main Card Container -->
-  <main class="page-card" id="exportableCard">
-
-    <!-- Header / Business Branding -->
-    <header class="header">
-      <div class="brand-info">
-        <h1 id="brandName"></h1>
-        <p class="brand-tagline" id="brandTagline"></p>
+  <div class="admin-container">
+    <header class="header" style="border-bottom: 2px solid var(--gold-primary); padding-bottom: 15px; margin-bottom: 25px;">
+      <div>
+        <h1 style="color: var(--navy-primary); font-size: 1.5rem;">IPO Data Manager</h1>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">Fill out the form below to update the live IPO update page instantly.</p>
       </div>
-      <div class="badge-live">
-        <span class="pulse-dot"></span> IPO ALERT
-      </div>
+      <a href="output.html" class="admin-btn btn-export" style="text-decoration: none; font-size: 0.85rem;">
+        <i class="fa-solid fa-eye"></i> View Live Output
+      </a>
     </header>
 
-    <!-- IPO Title Banner -->
-    <section class="ipo-banner">
-      <div class="ipo-header">
-        <h2 id="ipoName">Loading...</h2>
-        <span class="category-badge" id="ipoCategory">SME / Mainboard</span>
+    <form id="ipoEntryForm">
+      
+      <div class="form-group">
+        <label for="ipoName">IPO Company Name</label>
+        <input type="text" id="ipoName" placeholder="e.g., Caliber Mining & Logistics Limited" required>
       </div>
-      <p id="ipoDescription" class="ipo-desc"></p>
-    </section>
 
-    <!-- IPO Key Details Grid -->
-    <section class="section">
-      <h3 class="section-title"><i class="fa-solid fa-chart-line"></i> Key IPO Details</h3>
-      <div class="details-grid" id="ipoDetailsGrid">
-        <!-- Injected via JavaScript -->
-      </div>
-    </section>
-
-
-    <!-- Fixed Services Section -->
-    <section class="section services-section">
-      <h3 class="section-title"><i class="fa-solid fa-briefcase"></i> Our Financial Services</h3>
-      <div class="services-grid" id="servicesGrid">
-        <!-- Injected via JavaScript -->
-      </div>
-    </section>
-
-    <!-- Call To Action Section -->
-    <section class="cta-section">
-      <h3>Ready to Apply for IPOs & Start Trading?</h3>
-      <p>Open your Demat account today with zero hassle, expert bidding assistance, and complete portfolio support.</p>
-      <a href="#" id="ctaBtn" class="cta-button" target="_blank">
-        <i class="fa-solid fa-paper-plane"></i> Apply Now via WhatsApp
-      </a>
-    </section> 
-
-    <!-- Contact Details Section -->
-    <section class="section contact-section">
-      <h3 class="section-title"><i class="fa-solid fa-address-card"></i> Contact Information</h3>
-      <div class="contact-grid">
-        <div class="contact-item">
-          <i class="fa-solid fa-user"></i>
-          <div>
-            <strong>Contact Person</strong>
-            <span id="contactName"></span>
-          </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="ipoCategory">Category</label>
+          <select id="ipoCategory">
+            <option value="Mainboard IPO">Mainboard IPO</option>
+            <option value="SME IPO">SME IPO</option>
+          </select>
         </div>
-        <div class="contact-item">
-          <i class="fa-solid fa-phone"></i>
-          <div>
-            <strong>Phone</strong>
-            <span id="contactPhone"></span>
-          </div>
-        </div>
-        <div class="contact-item">
-          <i class="fa-solid fa-envelope"></i>
-          <div>
-            <strong>Email</strong>
-            <span id="contactEmail"></span>
-          </div>
-        </div>
-        <div class="contact-item">
-          <i class="fa-solid fa-location-dot"></i>
-          <div>
-            <strong>Office Address</strong>
-            <span id="contactAddress"></span>
-          </div>
+        <div class="form-group">
+          <label for="estListingGain">Est. Listing Gain</label>
+          <input type="text" id="estListingGain" placeholder="e.g., +28% to +35%">
         </div>
       </div>
-    </section>
 
-    <!-- Disclaimer -->
-    <footer class="disclaimer-footer">
-      <p class="disclaimer-text" id="disclaimerText"></p>
-      <div class="copyright" id="copyrightText"></div>
-    </footer>
+      <div class="form-group">
+        <label for="ipoDescription">Brief Description</label>
+        <textarea id="ipoDescription" rows="2" placeholder="Short description of company business..."></textarea>
+      </div>
 
-  </main>
+      <h4 style="margin: 20px 0 10px; color: var(--navy-primary);"><i class="fa-solid fa-list"></i> Issue Details</h4>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="biddingDates">Bidding Dates</label>
+          <input type="text" id="biddingDates" placeholder="e.g., Jul 28 - Jul 30, 2026">
+        </div>
+        <div class="form-group">
+          <label for="priceBand">Price Band</label>
+          <input type="text" id="priceBand" placeholder="e.g., ₹140 - ₹147 / share">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="issueSize">Issue Size</label>
+          <input type="text" id="issueSize" placeholder="e.g., ₹450.00 Cr">
+        </div>
+        <div class="form-group">
+          <label for="lotSize">Lot Size</label>
+          <input type="text" id="lotSize" placeholder="e.g., 100 Shares (₹14,700)">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="listingOn">Listing On</label>
+          <input type="text" id="listingOn" placeholder="e.g., BSE & NSE">
+        </div>
+        <div class="form-group">
+          <label for="expectedListing">Expected Listing Date</label>
+          <input type="text" id="expectedListing" placeholder="e.g., Aug 04, 2026">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="retailQuota">Retail Quota</label>
+        <input type="text" id="retailQuota" placeholder="e.g., 35%">
+      </div>
+
+      <div class="form-group">
+        <label for="highlights">Investment Highlights (One per line)</label>
+        <textarea id="highlights" rows="4" placeholder="Enter key point 1&#10;Enter key point 2&#10;Enter key point 3"></textarea>
+      </div>
+
+      <div class="btn-group">
+        <button type="submit" class="admin-btn btn-save"><i class="fa-solid fa-floppy-disk"></i> Save & Publish to Output</button>
+        <button type="button" id="resetBtn" class="admin-btn btn-reset"><i class="fa-solid fa-rotate-left"></i> Reset to Default</button>
+      </div>
+
+    </form>
+  </div>
 
   <script src="script.js"></script>
+  <script>
+    // Form specific load/save triggers
+    document.addEventListener("DOMContentLoaded", () => {
+      loadFormValues();
+
+      document.getElementById("ipoEntryForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        saveFormValues();
+      });
+
+      document.getElementById("resetBtn").addEventListener("click", () => {
+        if (confirm("Reset to default sample IPO data?")) {
+          localStorage.removeItem("CUSTOM_IPO_DATA");
+          alert("Reset complete! Redirecting to output page...");
+          window.location.href = "output.html";
+        }
+      });
+    });
+
+    function loadFormValues() {
+      const saved = localStorage.getItem("CUSTOM_IPO_DATA");
+      const data = saved ? JSON.parse(saved) : DEFAULT_IPO;
+
+      document.getElementById("ipoName").value = data.name || "";
+      document.getElementById("ipoCategory").value = data.category || "Mainboard IPO";
+      document.getElementById("ipoDescription").value = data.description || "";
+      
+      const getVal = (label) => {
+        const item = data.details.find(d => d.label === label);
+        return item ? item.value : "";
+      };
+
+      document.getElementById("biddingDates").value = getVal("Bidding Dates");
+      document.getElementById("priceBand").value = getVal("Price Band");
+      document.getElementById("issueSize").value = getVal("Issue Size");
+      document.getElementById("lotSize").value = getVal("Lot Size");
+      document.getElementById("listingOn").value = getVal("Listing On");
+      document.getElementById("expectedListing").value = getVal("Expected Listing");
+      document.getElementById("retailQuota").value = getVal("Retail Quota");
+      document.getElementById("estListingGain").value = getVal("Est. Listing Gain");
+      
+      document.getElementById("highlights").value = (data.highlights || []).join("\n");
+    }
+
+    function saveFormValues() {
+      const highlightsText = document.getElementById("highlights").value;
+      const highlightsArray = highlightsText.split("\n").filter(line => line.trim() !== "");
+
+      const updatedIpo = {
+        name: document.getElementById("ipoName").value,
+        category: document.getElementById("ipoCategory").value,
+        description: document.getElementById("ipoDescription").value,
+        details: [
+          { label: "Bidding Dates", value: document.getElementById("biddingDates").value },
+          { label: "Price Band", value: document.getElementById("priceBand").value },
+          { label: "Issue Size", value: document.getElementById("issueSize").value },
+          { label: "Lot Size", value: document.getElementById("lotSize").value },
+          { label: "Listing On", value: document.getElementById("listingOn").value },
+          { label: "Expected Listing", value: document.getElementById("expectedListing").value },
+          { label: "Retail Quota", value: document.getElementById("retailQuota").value },
+          { label: "Est. Listing Gain", value: document.getElementById("estListingGain").value, isHighlight: true }
+        ],
+        highlights: highlightsArray
+      };
+
+      localStorage.setItem("CUSTOM_IPO_DATA", JSON.stringify(updatedIpo));
+      alert("IPO details saved successfully!");
+      window.location.href = "output.html";
+    }
+  </script>
 </body>
 </html>
