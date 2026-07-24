@@ -10,7 +10,7 @@ const BUSINESS_CONFIG = {
   phoneRaw: "919712087970",
   email: "bvgohel.bhavin@gmail.com",
   address: "E-27, Maitri Lake View, Zundal, Gandhinagar",
-  disclaimer: "Disclaimer: Equity and IPO investments are subject to market risks. Read all scheme-related documents carefully before investing. Information provided here is for informational and educational purposes only and does not constitute financial advice."
+  disclaimer: "Disclaimer: Equity and IPO investments are subject to market risks. Read all scheme-related documents carefully before investing. Information provided here is for informational and educational purposes only and does not constitute financial advice. Grey Market Premium (GMP)/Est. Listing Gain is an unofficial, unregulated, and speculative market price indicator. GMP can fluctuate rapidly based on market sentiment and does not guarantee the actual listing price or performance of the stock."
 };
 
 const SERVICES = [
