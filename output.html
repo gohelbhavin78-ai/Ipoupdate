@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bhavinkumar Gohe | AMFI-registered Mutual Fund Distributor - 326820 </title>
+
+  <!-- Google Font: Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- html2canvas Library for Export as PNG -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <!-- Action Bar (Hidden on Print/Export) -->
+  <div class="action-bar no-export">
+    <div class="action-container">
+      <a href="index.html" class="action-btn btn-secondary" style="text-decoration: none;">
+        <i class="fa-solid fa-pen-to-square"></i> Edit Details
+      </a>
+      <button id="downloadBtn" class="action-btn btn-primary">
+        <i class="fa-solid fa-download"></i> Download PNG
+      </button>
+      <button id="copyBtn" class="action-btn btn-secondary">
+        <i class="fa-solid fa-copy"></i> Copy Details
+      </button>
+      <button id="shareWhatsappBtn" class="action-btn btn-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Card Container -->
+  <main class="page-card" id="exportableCard">
+
+    <!-- Header / Business Branding -->
+    <header class="header">
+      <div class="brand-info">
+        <h1 id="brandName"></h1>
+        <p class="brand-tagline" id="brandTagline"></p>
+      </div>
+      <div class="badge-live">
+        <span class="pulse-dot"></span> IPO ALERT
+      </div>
+    </header>
+
+    <!-- IPO Title Banner -->
+    <section class="ipo-banner">
+      <div class="ipo-header">
+        <h2 id="ipoName">Loading...</h2>
+        <span class="category-badge" id="ipoCategory">SME / Mainboard</span>
+      </div>
+      <p id="ipoDescription" class="ipo-desc"></p>
+    </section>
+
+    <!-- IPO Key Details Grid -->
+    <section class="section">
+      <h3 class="section-title"><i class="fa-solid fa-chart-line"></i> Key IPO Details</h3>
+      <div class="details-grid" id="ipoDetailsGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Investment Highlights -->
+    <section class="section">
+      <h3 class="section-title"><i class="fa-solid fa-star"></i> Investment Highlights</h3>
+      <ul class="highlights-list" id="highlightsList">
+        <!-- Injected via JavaScript -->
+      </ul>
+    </section>
+
+    <!-- Fixed Services Section -->
+    <section class="section services-section">
+      <h3 class="section-title"><i class="fa-solid fa-briefcase"></i> Our Financial Services</h3>
+      <div class="services-grid" id="servicesGrid">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- Call To Action Section (Free Demat Focus) -->
+    <section class="cta-section">
+      <h3>Ready to Apply for IPOs & Start Trading?</h3>
+      <p>Open your free Demat account today with zero hassle, expert bidding assistance, and complete portfolio support.</p>
+      <a href="#" id="ctaBtn" class="cta-button" target="_blank">
+        <i class="fa-solid fa-paper-plane"></i> Open Free Demat Account via WhatsApp
+      </a>
+    </section>
+
+    <!-- Contact Details Section -->
+    <section class="section contact-section">
+      <h3 class="section-title"><i class="fa-solid fa-address-card"></i> Contact Information</h3>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <i class="fa-solid fa-user"></i>
+          <div>
+            <strong>Contact Person</strong>
+            <span id="contactName"></span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <strong>Phone</strong>
+            <span id="contactPhone"></span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <i class="fa-solid fa-envelope"></i>
+          <div>
+            <strong>Email</strong>
+            <span id="contactEmail"></span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <div>
+            <strong>Office Address</strong>
+            <span id="contactAddress"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <footer class="disclaimer-footer">
+      <p class="disclaimer-text" id="disclaimerText"></p>
+      <div class="copyright" id="copyrightText"></div>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
