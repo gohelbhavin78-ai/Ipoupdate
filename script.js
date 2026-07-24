@@ -24,8 +24,8 @@ const SERVICES = [
   { title: "Portfolio Management", icon: "fa-briefcase" }
 ];
 
-// 3. Dynamic IPO Details Configuration (Update this whenever a new IPO launches!)
-const CURRENT_IPO = {
+// Default IPO data if nothing is saved in browser storage yet
+const DEFAULT_IPO = {
   name: "Caliber Mining & Logistics Limited",
   category: "Mainboard IPO",
   description: "Comprehensive mining operations and integrated logistics solution provider expanding infrastructure and fleet capability.",
@@ -45,15 +45,29 @@ const CURRENT_IPO = {
    APPLICATION LOGIC - DO NOT MODIFY BELOW UNLESS NEEDED
    ========================================================== */
 
+// Check for local saved entries, or use DEFAULT_IPO
+function getActiveIpoData() {
+  const saved = localStorage.getItem("CUSTOM_IPO_DATA");
+  return saved ? JSON.parse(saved) : DEFAULT_IPO;
+}
+
+/* ==========================================================
+   PAGE RENDER LOGIC
+   ========================================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
-  renderBranding();
-  renderServices();
-  renderIpoDetails();
-  setupActionButtons();
+  // Only run render logic if index.html layout elements exist
+  if (document.getElementById("brandName")) {
+    renderBranding();
+    renderServices();
+    renderIpoDetails();
+    setupActionButtons();
+  }
 });
 
-// Populate Branding Information
 function renderBranding() {
+  const currentIpo = getActiveIpoData();
+  
   document.getElementById("brandName").innerText = BUSINESS_CONFIG.brandName;
   document.getElementById("brandTagline").innerText = BUSINESS_CONFIG.brandTagline;
   document.getElementById("contactName").innerText = BUSINESS_CONFIG.contactName;
@@ -65,12 +79,11 @@ function renderBranding() {
   const currentYear = new Date().getFullYear();
   document.getElementById("copyrightText").innerText = `© ${currentYear} ${BUSINESS_CONFIG.brandName}. All Rights Reserved.`;
 
-  // WhatsApp Call To Action Link
-  const ctaMsg = encodeURIComponent(`Hello ${BUSINESS_CONFIG.contactName}, I would like to apply for the ${CURRENT_IPO.name} IPO. Please guide me with the application process.`);
+  // Free Demat CTA link
+  const ctaMsg = encodeURIComponent(`Hello ${BUSINESS_CONFIG.contactName}, I would like to open a free Demat account for ${currentIpo.name}. Please guide me.`);
   document.getElementById("ctaBtn").href = `https://wa.me/${BUSINESS_CONFIG.phoneRaw}?text=${ctaMsg}`;
 }
 
-// Populate Services
 function renderServices() {
   const container = document.getElementById("servicesGrid");
   container.innerHTML = SERVICES.map(s => `
@@ -81,154 +94,58 @@ function renderServices() {
   `).join("");
 }
 
-// Populate Dynamic IPO Details & Highlights
 function renderIpoDetails() {
-  document.getElementById("ipoName").innerText = CURRENT_IPO.name;
-  document.getElementById("ipoCategory").innerText = CURRENT_IPO.category;
-  document.getElementById("ipoDescription").innerText = CURRENT_IPO.description;
+  const ipo = getActiveIpoData();
 
-  // Grid Details
+  document.getElementById("ipoName").innerText = ipo.name;
+  document.getElementById("ipoCategory").innerText = ipo.category;
+  document.getElementById("ipoDescription").innerText = ipo.description;
+
   const gridContainer = document.getElementById("ipoDetailsGrid");
-  gridContainer.innerHTML = CURRENT_IPO.details.map(d => `
+  gridContainer.innerHTML = ipo.details.map(d => `
     <div class="detail-card">
       <div class="detail-label">${d.label}</div>
       <div class="detail-value ${d.isHighlight ? 'highlight-val' : ''}">${d.value}</div>
     </div>
   `).join("");
 
-  // Highlights
   const listContainer = document.getElementById("highlightsList");
-  listContainer.innerHTML = CURRENT_IPO.highlights.map(h => `
+  listContainer.innerHTML = (ipo.highlights || []).map(h => `
     <li>${h}</li>
   `).join("");
 }
 
-// Setup Event Handlers for Export / Copy / Share
 function setupActionButtons() {
-  // 1. Download as PNG
-  document.getElementById("downloadBtn").addEventListener("click", () => {
+  const ipo = getActiveIpoData();
+
+  // 1. Download PNG
+  document.getElementById("downloadBtn")?.addEventListener("click", () => {
     const cardElement = document.getElementById("exportableCard");
-    
-    // Temporarily apply adjustments if needed for canvas rendering
-    html2canvas(cardElement, {
-      scale: 2, // High resolution
-      useCORS: true,
-      backgroundColor: "#FFFFFF"
-    }).then(canvas => {
+    html2canvas(cardElement, { scale: 2, useCORS: true, backgroundColor: "#FFFFFF" }).then(canvas => {
       const image = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      const cleanIpoName = CURRENT_IPO.name.replace(/[^a-zA-Z0-9]/g, "_");
+      const cleanIpoName = ipo.name.replace(/[^a-zA-Z0-9]/g, "_");
       link.download = `${cleanIpoName}_Update.png`;
       link.href = image;
       link.click();
     });
   });
 
-  // 2. Copy IPO Details to Clipboard
-  document.getElementById("copyBtn").addEventListener("click", () => {
-    let textToCopy = `📈 *IPO UPDATE: ${CURRENT_IPO.name}*\n`;
-    textToCopy += `Category: ${CURRENT_IPO.category}\n\n`;
-    
-    CURRENT_IPO.details.forEach(d => {
-      textToCopy += `• *${d.label}:* ${d.value}\n`;
-    });
+  // 2. Copy Details
+  document.getElementById("copyBtn")?.addEventListener("click", () => {
+    let textToCopy = `📈 *IPO UPDATE: ${ipo.name}*\nCategory: ${ipo.category}\n\n`;
+    ipo.details.forEach(d => { textToCopy += `• *${d.label}:* ${d.value}\n`; });
+    textToCopy += `\n*Open Free Demat Account & Bidding Assistance:*\n${BUSINESS_CONFIG.contactName}\n📞 ${BUSINESS_CONFIG.phone}\n📍 ${BUSINESS_CONFIG.address}`;
 
-    textToCopy += `\n*Contact for Bidding & Assistance:*\n`;
-    textToCopy += `${BUSINESS_CONFIG.contactName}\n`;
-    textToCopy += `📞 ${BUSINESS_CONFIG.phone}\n`;
-    textToCopy += `📧 ${BUSINESS_CONFIG.email}\n`;
-    textToCopy += `📍 ${BUSINESS_CONFIG.address}`;
-
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      alert("IPO details copied to clipboard!");
-    }).catch(err => {
-      console.error("Failed to copy details: ", err);
-    });
+    navigator.clipboard.writeText(textToCopy).then(() => alert("IPO details copied!"));
   });
 
-  // 3. Share on WhatsApp
-  document.getElementById("shareWhatsappBtn").addEventListener("click", () => {
-    let message = `🚨 *NEW IPO ALERT* 🚨\n\n`;
-    message += `*${CURRENT_IPO.name}* (${CURRENT_IPO.category})\n\n`;
-    
-    CURRENT_IPO.details.forEach(d => {
-      message += `▪️ *${d.label}:* ${d.value}\n`;
-    });
+  // 3. Share WhatsApp
+  document.getElementById("shareWhatsappBtn")?.addEventListener("click", () => {
+    let message = `🚨 *NEW IPO ALERT* 🚨\n\n*${ipo.name}* (${ipo.category})\n\n`;
+    ipo.details.forEach(d => { message += `▪️ *${d.label}:* ${d.value}\n`; });
+    message += `\nOpen Free Demat Account & Apply:\n👤 *${BUSINESS_CONFIG.contactName}*\n📞 *Call/WhatsApp:* ${BUSINESS_CONFIG.phone}`;
 
-    message += `\nApply now with expert support:\n`;
-    message += `👤 *${BUSINESS_CONFIG.contactName}*\n`;
-    message += `📞 *Call/WhatsApp:* ${BUSINESS_CONFIG.phone}\n`;
-    message += `📍 ${BUSINESS_CONFIG.address}`;
-
-    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, "_blank");
   });
-}
-
-
-
-// 1. Set default fallback data or leave empty
-let CURRENT_IPO = {
-  name: "Loading...",
-  category: "",
-  description: "",
-  details: [],
-  highlights: []
-};
-
-// 2. Define your URL endpoint here
-const IPO_DATA_URL = "https://ipowatch.in/indo-mim-ipo-gmp-grey-market-premium/";
-
-// 3. Fetch data dynamically on load
-document.addEventListener("DOMContentLoaded", async () => {
-  renderBranding();
-  renderServices();
-  
-  // Show loading state initially
-  renderIpoDetails();
-
-  // Auto-fetch data from your link
-  await fetchIpoData(IPO_DATA_URL);
-
-  setupActionButtons();
-});
-
-// Function to fetch and update the IPO data
-async function fetchIpoData(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-
-    // Map fetched data into CURRENT_IPO structure
-    CURRENT_IPO = {
-      name: data.name || "N/A",
-      category: data.category || "Mainboard IPO",
-      description: data.description || "",
-      details: [
-        { label: "Bidding Dates", value: data.biddingDates || "TBA" },
-        { label: "Price Band", value: data.priceBand || "TBA" },
-        { label: "Issue Size", value: data.issueSize || "TBA" },
-        { label: "Lot Size", value: data.lotSize || "TBA" },
-        { label: "Listing On", value: data.listingOn || "BSE & NSE" },
-        { label: "Expected Listing", value: data.expectedListing || "TBA" },
-        { label: "Retail Quota", value: data.retailQuota || "35%" },
-        { label: "Est. Listing Gain", value: data.estListingGain || "N/A", isHighlight: true }
-      ],
-      highlights: data.highlights || []
-    };
-
-    // Re-render the UI with fresh data
-    renderIpoDetails();
-    
-    // Update the WhatsApp CTA link with the new IPO name
-    renderBranding();
-
-  } catch (error) {
-    console.error("Failed to fetch IPO details:", error);
-    // Optionally display an error message on the page
-  }
 }
