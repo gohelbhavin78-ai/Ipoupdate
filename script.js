@@ -1,8 +1,7 @@
 /* ==========================================================
-   CONFIGURABLE DATA - EDIT YOUR DETAILS AND IPO INFO HERE
+   CONFIGURABLE DATA & DEFAULT FALLBACK
    ========================================================== */
 
-// 1. Fixed Business & Branding Configuration
 const BUSINESS_CONFIG = {
   brandName: "BHAVINKUMAR GOHEL",
   brandTagline: "AMFI-registered Mutual Fund Distributor - 326820",
@@ -14,7 +13,6 @@ const BUSINESS_CONFIG = {
   disclaimer: "Disclaimer: Equity and IPO investments are subject to market risks. Read all scheme-related documents carefully before investing. Information provided here is for informational and educational purposes only and does not constitute financial advice."
 };
 
-// 2. Fixed Services Offered
 const SERVICES = [
   { title: "Stock Broking", icon: "fa-chart-pie" },
   { title: "IPO Update", icon: "fa-rocket" },
@@ -24,7 +22,7 @@ const SERVICES = [
   { title: "Portfolio Management", icon: "fa-briefcase" }
 ];
 
-// Default IPO data if nothing is saved in browser storage yet
+// Fallback IPO details if nothing has been saved yet
 const DEFAULT_IPO = {
   name: "Caliber Mining & Logistics Limited",
   category: "Mainboard IPO",
@@ -38,25 +36,26 @@ const DEFAULT_IPO = {
     { label: "Expected Listing", value: "Aug 04, 2026" },
     { label: "Retail Quota", value: "35%" },
     { label: "Est. Listing Gain", value: "+28% to +35%", isHighlight: true }
+  ],
+  highlights: [
+    "Consistent revenue growth over the last 3 financial years.",
+    "Strong order book with major public and private infrastructure contracts.",
+    "Debt reduction strategy using funds raised from the fresh issue.",
+    "Promoter holding post-issue remains robust at 68.5%."
   ]
 };
 
-/* ==========================================================
-   APPLICATION LOGIC - DO NOT MODIFY BELOW UNLESS NEEDED
-   ========================================================== */
-
-// Check for local saved entries, or use DEFAULT_IPO
+// Retrieve active IPO data from browser storage
 function getActiveIpoData() {
   const saved = localStorage.getItem("CUSTOM_IPO_DATA");
   return saved ? JSON.parse(saved) : DEFAULT_IPO;
 }
 
 /* ==========================================================
-   PAGE RENDER LOGIC
+   PAGE RENDER LOGIC (Runs on output.html)
    ========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Only run render logic if index.html layout elements exist
   if (document.getElementById("brandName")) {
     renderBranding();
     renderServices();
@@ -67,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function renderBranding() {
   const currentIpo = getActiveIpoData();
-  
+
   document.getElementById("brandName").innerText = BUSINESS_CONFIG.brandName;
   document.getElementById("brandTagline").innerText = BUSINESS_CONFIG.brandTagline;
   document.getElementById("contactName").innerText = BUSINESS_CONFIG.contactName;
@@ -79,8 +78,8 @@ function renderBranding() {
   const currentYear = new Date().getFullYear();
   document.getElementById("copyrightText").innerText = `© ${currentYear} ${BUSINESS_CONFIG.brandName}. All Rights Reserved.`;
 
-  // Free Demat CTA link
-  const ctaMsg = encodeURIComponent(`Hello ${BUSINESS_CONFIG.contactName}, I would like to open a free Demat account for ${currentIpo.name}. Please guide me.`);
+  // WhatsApp Call To Action Link for Free Demat Account
+  const ctaMsg = encodeURIComponent(`Hello ${BUSINESS_CONFIG.contactName}, I would like to open a free Demat account for ${currentIpo.name}. Please guide me through the process.`);
   document.getElementById("ctaBtn").href = `https://wa.me/${BUSINESS_CONFIG.phoneRaw}?text=${ctaMsg}`;
 }
 
@@ -118,7 +117,7 @@ function renderIpoDetails() {
 function setupActionButtons() {
   const ipo = getActiveIpoData();
 
-  // 1. Download PNG
+  // Download card as PNG
   document.getElementById("downloadBtn")?.addEventListener("click", () => {
     const cardElement = document.getElementById("exportableCard");
     html2canvas(cardElement, { scale: 2, useCORS: true, backgroundColor: "#FFFFFF" }).then(canvas => {
@@ -131,16 +130,16 @@ function setupActionButtons() {
     });
   });
 
-  // 2. Copy Details
+  // Copy text details
   document.getElementById("copyBtn")?.addEventListener("click", () => {
     let textToCopy = `📈 *IPO UPDATE: ${ipo.name}*\nCategory: ${ipo.category}\n\n`;
     ipo.details.forEach(d => { textToCopy += `• *${d.label}:* ${d.value}\n`; });
-    textToCopy += `\n*Open Free Demat Account & Bidding Assistance:*\n${BUSINESS_CONFIG.contactName}\n📞 ${BUSINESS_CONFIG.phone}\n📍 ${BUSINESS_CONFIG.address}`;
+    textToCopy += `\n*Open Free Demat Account & Get Bidding Assistance:*\n${BUSINESS_CONFIG.contactName}\n📞 ${BUSINESS_CONFIG.phone}\n📍 ${BUSINESS_CONFIG.address}`;
 
-    navigator.clipboard.writeText(textToCopy).then(() => alert("IPO details copied!"));
+    navigator.clipboard.writeText(textToCopy).then(() => alert("IPO details copied to clipboard!"));
   });
 
-  // 3. Share WhatsApp
+  // Share to WhatsApp
   document.getElementById("shareWhatsappBtn")?.addEventListener("click", () => {
     let message = `🚨 *NEW IPO ALERT* 🚨\n\n*${ipo.name}* (${ipo.category})\n\n`;
     ipo.details.forEach(d => { message += `▪️ *${d.label}:* ${d.value}\n`; });
