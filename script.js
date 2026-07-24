@@ -5,7 +5,7 @@
 // 1. Fixed Business & Branding Configuration
 const BUSINESS_CONFIG = {
   brandName: "BHAVINKUMAR GOHEL",
-  brandTagline: "Stock Broking & Financial Services",
+  brandTagline: "AMFI-registered Mutual Fund Distributor - 326820",
   contactName: "Bhavinkumar Gohel",
   phone: "+91 97120 87970",
   phoneRaw: "919712087970",
@@ -17,7 +17,7 @@ const BUSINESS_CONFIG = {
 // 2. Fixed Services Offered
 const SERVICES = [
   { title: "Stock Broking", icon: "fa-chart-pie" },
-  { title: "IPO Bidding & Advisory", icon: "fa-rocket" },
+  { title: "IPO Update", icon: "fa-rocket" },
   { title: "Mutual Funds", icon: "fa-piggy-bank" },
   { title: "Loans & Finance", icon: "fa-hand-holding-dollar" },
   { title: "Insurance Solutions", icon: "fa-shield-halved" },
@@ -38,12 +38,6 @@ const CURRENT_IPO = {
     { label: "Expected Listing", value: "Aug 04, 2026" },
     { label: "Retail Quota", value: "35%" },
     { label: "Est. Listing Gain", value: "+28% to +35%", isHighlight: true }
-  ],
-  highlights: [
-    "Consistent revenue growth over the last 3 financial years.",
-    "Strong order book with major public and private infrastructure contracts.",
-    "Debt reduction strategy using funds raised from the fresh issue.",
-    "Promoter holding post-issue remains robust at 68.5%."
   ]
 };
 
