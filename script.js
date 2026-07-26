@@ -118,16 +118,56 @@ function setupActionButtons() {
   const ipo = getActiveIpoData();
 
   // Download card as PNG
-  document.getElementById("downloadBtn")?.addEventListener("click", () => {
+  document.getElementById("downloadBtn")?.addEventListener("click", async function () {
     const cardElement = document.getElementById("exportableCard");
-    html2canvas(cardElement, { scale: 2, useCORS: true, backgroundColor: "#FFFFFF" }).then(canvas => {
-      const image = canvas.toDataURL("image/png");
+
+    // 1. Check if the container element exists
+    if (!cardElement) {
+      alert("Error: #exportableCard element not found in HTML!");
+      return;
+    }
+
+    // 2. Ensure html2canvas library is loaded
+    if (typeof html2canvas !== "function") {
+      alert("Error: html2canvas library is missing or failed to load.");
+      return;
+    }
+
+    const btn = this;
+    const originalText = btn.innerText;
+    btn.innerText = "Generating PNG...";
+    btn.disabled = true;
+
+    try {
+      // 3. Render canvas with explicit bounds and allowTaint flags
+      const canvas = await html2canvas(cardElement, {
+        scale: 2, // High resolution
+        useCORS: true, // Allow cross-origin images
+        allowTaint: true,
+        backgroundColor: "#FFFFFF",
+        logging: false
+      });
+
+      // 4. Convert to Data URL
+      const image = canvas.toDataURL("image/png", 1.0);
+      const cleanIpoName = (ipo.name || "IPO").replace(/[^a-zA-Z0-9]/g, "_");
+      const fileName = `${cleanIpoName}_Update.png`;
+
+      // 5. Download handling (cross-browser compatible)
       const link = document.createElement("a");
-      const cleanIpoName = ipo.name.replace(/[^a-zA-Z0-9]/g, "_");
-      link.download = `${cleanIpoName}_Update.png`;
+      link.download = fileName;
       link.href = image;
+      document.body.appendChild(link);
       link.click();
-    });
+      document.body.removeChild(link);
+
+    } catch (err) {
+      console.error("PNG Download Error:", err);
+      alert("Failed to generate image download. See console for details.");
+    } finally {
+      btn.innerText = originalText;
+      btn.disabled = false;
+    }
   });
 
   // Copy text details
@@ -136,7 +176,9 @@ function setupActionButtons() {
     ipo.details.forEach(d => { textToCopy += `• *${d.label}:* ${d.value}\n`; });
     textToCopy += `\n*Open Free Demat Account & Get Bidding Assistance:*\n${BUSINESS_CONFIG.contactName}\n📞 ${BUSINESS_CONFIG.phone}\n📍 ${BUSINESS_CONFIG.address}`;
 
-    navigator.clipboard.writeText(textToCopy).then(() => alert("IPO details copied to clipboard!"));
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => alert("IPO details copied to clipboard!"))
+      .catch(() => alert("Failed to copy details."));
   });
 
   // Share to WhatsApp
