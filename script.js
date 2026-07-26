@@ -4,18 +4,18 @@
 
 const BUSINESS_CONFIG = {
   brandName: "BHAVINKUMAR GOHEL",
-  brandTagline: "AMFI-registered Mutual Fund Distributor - 326820",
+  brandTagline: "AMFI-Registered Mutual Fund Distributor - 326820",
   contactName: "Bhavinkumar Gohel",
   phone: "+91 97120 87970",
   phoneRaw: "919712087970",
   email: "bvgohel.bhavin@gmail.com",
-  address: "E-27, Maitri Lake View, Zundal, Gandhinagar",
+  address: "E-27, Maitri Lake View, Zundal, Gandhinagar, Gujarat 382421",
   disclaimer: "Disclaimer: Equity and IPO investments are subject to market risks. Read all scheme-related documents carefully before investing. Information provided here is for informational and educational purposes only and does not constitute financial advice. Grey Market Premium (GMP)/Est. Listing Gain is an unofficial, unregulated, and speculative market price indicator. GMP can fluctuate rapidly based on market sentiment and does not guarantee the actual listing price or performance of the stock."
 };
 
 const SERVICES = [
   { title: "Stock Broking", icon: "fa-chart-pie" },
-  { title: "IPO Update", icon: "fa-rocket" },
+  { title: "IPO Bidding & Advisory", icon: "fa-rocket" },
   { title: "Mutual Funds", icon: "fa-piggy-bank" },
   { title: "Loans & Finance", icon: "fa-hand-holding-dollar" },
   { title: "Insurance Solutions", icon: "fa-shield-halved" },
@@ -29,19 +29,13 @@ const DEFAULT_IPO = {
   description: "Comprehensive mining operations and integrated logistics solution provider expanding infrastructure and fleet capability.",
   details: [
     { label: "Bidding Dates", value: "Jul 28 - Jul 30, 2026" },
-    { label: "Price Band", value: "₹140 - ₹147 / share" },
+    { label: "Price Band", value: "₹140 - ₹147 Per share" },
     { label: "Issue Size", value: "₹450.00 Cr" },
     { label: "Lot Size", value: "100 Shares (₹14,700)" },
     { label: "Listing On", value: "BSE & NSE" },
     { label: "Expected Listing", value: "Aug 04, 2026" },
     { label: "Retail Quota", value: "35%" },
     { label: "Est. Listing Gain", value: "+28% to +35%", isHighlight: true }
-  ],
-  highlights: [
-    "Consistent revenue growth over the last 3 financial years.",
-    "Strong order book with major public and private infrastructure contracts.",
-    "Debt reduction strategy using funds raised from the fresh issue.",
-    "Promoter holding post-issue remains robust at 68.5%."
   ]
 };
 
@@ -51,40 +45,53 @@ function getActiveIpoData() {
   return saved ? JSON.parse(saved) : DEFAULT_IPO;
 }
 
+// Helper utility to safely populate text content without throwing errors
+function setElementText(id, text) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.innerText = text || "";
+  } else {
+    console.warn(`[Warning] Element with id="${id}" was not found in HTML.`);
+  }
+}
+
 /* ==========================================================
-   PAGE RENDER LOGIC (Runs on output.html)
+   PAGE RENDER LOGIC
    ========================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("brandName")) {
-    renderBranding();
-    renderServices();
-    renderIpoDetails();
-    setupActionButtons();
-  }
+  renderBranding();
+  renderServices();
+  renderIpoDetails();
+  setupActionButtons();
 });
 
 function renderBranding() {
   const currentIpo = getActiveIpoData();
 
-  document.getElementById("brandName").innerText = BUSINESS_CONFIG.brandName;
-  document.getElementById("brandTagline").innerText = BUSINESS_CONFIG.brandTagline;
-  document.getElementById("contactName").innerText = BUSINESS_CONFIG.contactName;
-  document.getElementById("contactPhone").innerText = BUSINESS_CONFIG.phone;
-  document.getElementById("contactEmail").innerText = BUSINESS_CONFIG.email;
-  document.getElementById("contactAddress").innerText = BUSINESS_CONFIG.address;
-  document.getElementById("disclaimerText").innerText = BUSINESS_CONFIG.disclaimer;
-  
+  setElementText("brandName", BUSINESS_CONFIG.brandName);
+  setElementText("brandTagline", BUSINESS_CONFIG.brandTagline);
+  setElementText("contactName", BUSINESS_CONFIG.contactName);
+  setElementText("contactPhone", BUSINESS_CONFIG.phone);
+  setElementText("contactEmail", BUSINESS_CONFIG.email);
+  setElementText("contactAddress", BUSINESS_CONFIG.address);
+  setElementText("disclaimerText", BUSINESS_CONFIG.disclaimer);
+
   const currentYear = new Date().getFullYear();
-  document.getElementById("copyrightText").innerText = `© ${currentYear} ${BUSINESS_CONFIG.brandName}. All Rights Reserved.`;
+  setElementText("copyrightText", `© ${currentYear} ${BUSINESS_CONFIG.brandName}. All Rights Reserved.`);
 
   // WhatsApp Call To Action Link for Free Demat Account
-  const ctaMsg = encodeURIComponent(`Hello ${BUSINESS_CONFIG.contactName}, I would like to open a free Demat account for ${currentIpo.name}. Please guide me through the process.`);
-  document.getElementById("ctaBtn").href = `https://wa.me/${BUSINESS_CONFIG.phoneRaw}?text=${ctaMsg}`;
+  const ctaBtn = document.getElementById("ctaBtn");
+  if (ctaBtn) {
+    const ctaMsg = encodeURIComponent(`Hello ${BUSINESS_CONFIG.contactName}, I would like to open a free Demat account for ${currentIpo.name}. Please guide me through the process.`);
+    ctaBtn.href = `https://wa.me/${BUSINESS_CONFIG.phoneRaw}?text=${ctaMsg}`;
+  }
 }
 
 function renderServices() {
   const container = document.getElementById("servicesGrid");
+  if (!container) return;
+
   container.innerHTML = SERVICES.map(s => `
     <div class="service-card">
       <i class="fa-solid ${s.icon}"></i>
@@ -96,97 +103,114 @@ function renderServices() {
 function renderIpoDetails() {
   const ipo = getActiveIpoData();
 
-  document.getElementById("ipoName").innerText = ipo.name;
-  document.getElementById("ipoCategory").innerText = ipo.category;
-  document.getElementById("ipoDescription").innerText = ipo.description;
+  // Safely set primary text fields
+  setElementText("ipoName", ipo.name);
+  setElementText("ipoCategory", ipo.category);
+  setElementText("ipoDescription", ipo.description);
 
+  // Safely update Key IPO Details Grid
   const gridContainer = document.getElementById("ipoDetailsGrid");
-  gridContainer.innerHTML = ipo.details.map(d => `
-    <div class="detail-card">
-      <div class="detail-label">${d.label}</div>
-      <div class="detail-value ${d.isHighlight ? 'highlight-val' : ''}">${d.value}</div>
-    </div>
-  `).join("");
+  if (gridContainer) {
+    gridContainer.innerHTML = (ipo.details || []).map(d => `
+      <div class="detail-card">
+        <div class="detail-label">${d.label}</div>
+        <div class="detail-value ${d.isHighlight ? 'highlight-val' : ''}">${d.value}</div>
+      </div>
+    `).join("");
+  }
 
+  // Safely update Highlights list (if element exists)
   const listContainer = document.getElementById("highlightsList");
-  listContainer.innerHTML = (ipo.highlights || []).map(h => `
-    <li>${h}</li>
-  `).join("");
+  if (listContainer) {
+    listContainer.innerHTML = (ipo.highlights || []).map(h => `
+      <li>${h}</li>
+    `).join("");
+  }
 }
+
+/* ==========================================================
+   EVENT HANDLERS & EXPORT LOGIC
+   ========================================================== */
 
 function setupActionButtons() {
   const ipo = getActiveIpoData();
 
-  // Download card as PNG
-  document.getElementById("downloadBtn")?.addEventListener("click", async function () {
-    const cardElement = document.getElementById("exportableCard");
+  // 1. Download card as PNG
+  const downloadBtn = document.getElementById("downloadBtn");
+  if (downloadBtn) {
+    downloadBtn.addEventListener("click", async function () {
+      const cardElement = document.getElementById("exportableCard");
 
-    // 1. Check if the container element exists
-    if (!cardElement) {
-      alert("Error: #exportableCard element not found in HTML!");
-      return;
-    }
+      if (!cardElement) {
+        alert("Error: Card container (#exportableCard) not found.");
+        return;
+      }
 
-    // 2. Ensure html2canvas library is loaded
-    if (typeof html2canvas !== "function") {
-      alert("Error: html2canvas library is missing or failed to load.");
-      return;
-    }
+      if (typeof html2canvas !== "function") {
+        alert("Error: html2canvas library missing from head script.");
+        return;
+      }
 
-    const btn = this;
-    const originalText = btn.innerText;
-    btn.innerText = "Generating PNG...";
-    btn.disabled = true;
+      const originalBtnText = downloadBtn.innerHTML;
+      downloadBtn.disabled = true;
+      downloadBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Exporting...`;
 
-    try {
-      // 3. Render canvas with explicit bounds and allowTaint flags
-      const canvas = await html2canvas(cardElement, {
-        scale: 2, // High resolution
-        useCORS: true, // Allow cross-origin images
-        allowTaint: true,
-        backgroundColor: "#FFFFFF",
-        logging: false
+      try {
+        const canvas = await html2canvas(cardElement, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#FFFFFF",
+          logging: false
+        });
+
+        const image = canvas.toDataURL("image/png", 1.0);
+        const cleanIpoName = (ipo.name || "IPO").replace(/[^a-zA-Z0-9]/g, "_");
+        
+        const link = document.createElement("a");
+        link.download = `${cleanIpoName}_Update.png`;
+        link.href = image;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+      } catch (err) {
+        console.error("PNG Export Failed:", err);
+        alert("Could not generate PNG image. Please try again.");
+      } finally {
+        downloadBtn.disabled = false;
+        downloadBtn.innerHTML = originalBtnText;
+      }
+    });
+  }
+
+  // 2. Copy details as text
+  const copyBtn = document.getElementById("copyBtn");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", () => {
+      let textToCopy = `📈 *IPO UPDATE: ${ipo.name}*\nCategory: ${ipo.category}\n\n`;
+      (ipo.details || []).forEach(d => {
+        textToCopy += `• *${d.label}:* ${d.value}\n`;
       });
+      textToCopy += `\n*Open Free Demat Account & Get Bidding Assistance:*\n${BUSINESS_CONFIG.contactName}\n📞 ${BUSINESS_CONFIG.phone}\n📍 ${BUSINESS_CONFIG.address}`;
 
-      // 4. Convert to Data URL
-      const image = canvas.toDataURL("image/png", 1.0);
-      const cleanIpoName = (ipo.name || "IPO").replace(/[^a-zA-Z0-9]/g, "_");
-      const fileName = `${cleanIpoName}_Update.png`;
+      navigator.clipboard.writeText(textToCopy)
+        .then(() => alert("IPO details copied to clipboard!"))
+        .catch(err => console.error("Clipboard copy failed:", err));
+    });
+  }
 
-      // 5. Download handling (cross-browser compatible)
-      const link = document.createElement("a");
-      link.download = fileName;
-      link.href = image;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+  // 3. Share details on WhatsApp
+  const shareWhatsappBtn = document.getElementById("shareWhatsappBtn");
+  if (shareWhatsappBtn) {
+    shareWhatsappBtn.addEventListener("click", () => {
+      let message = `🚨 *NEW IPO ALERT* 🚨\n\n*${ipo.name}* (${ipo.category})\n\n`;
+      (ipo.details || []).forEach(d => {
+        message += `▪️ *${d.label}:* ${d.value}\n`;
+      });
+      message += `\nOpen Free Demat Account & Apply:\n👤 *${BUSINESS_CONFIG.contactName}*\n📞 *Call/WhatsApp:* ${BUSINESS_CONFIG.phone}`;
 
-    } catch (err) {
-      console.error("PNG Download Error:", err);
-      alert("Failed to generate image download. See console for details.");
-    } finally {
-      btn.innerText = originalText;
-      btn.disabled = false;
-    }
-  });
-
-  // Copy text details
-  document.getElementById("copyBtn")?.addEventListener("click", () => {
-    let textToCopy = `📈 *IPO UPDATE: ${ipo.name}*\nCategory: ${ipo.category}\n\n`;
-    ipo.details.forEach(d => { textToCopy += `• *${d.label}:* ${d.value}\n`; });
-    textToCopy += `\n*Open Free Demat Account & Get Bidding Assistance:*\n${BUSINESS_CONFIG.contactName}\n📞 ${BUSINESS_CONFIG.phone}\n📍 ${BUSINESS_CONFIG.address}`;
-
-    navigator.clipboard.writeText(textToCopy)
-      .then(() => alert("IPO details copied to clipboard!"))
-      .catch(() => alert("Failed to copy details."));
-  });
-
-  // Share to WhatsApp
-  document.getElementById("shareWhatsappBtn")?.addEventListener("click", () => {
-    let message = `🚨 *NEW IPO ALERT* 🚨\n\n*${ipo.name}* (${ipo.category})\n\n`;
-    ipo.details.forEach(d => { message += `▪️ *${d.label}:* ${d.value}\n`; });
-    message += `\nOpen Free Demat Account & Apply:\n👤 *${BUSINESS_CONFIG.contactName}*\n📞 *Call/WhatsApp:* ${BUSINESS_CONFIG.phone}`;
-
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, "_blank");
-  });
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, "_blank");
+    });
+  }
 }
