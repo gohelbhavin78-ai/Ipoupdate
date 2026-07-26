@@ -29,7 +29,7 @@ const DEFAULT_IPO = {
   description: "Comprehensive mining operations and integrated logistics solution provider expanding infrastructure and fleet capability.",
   details: [
     { label: "Bidding Dates", value: "Jul 28 - Jul 30, 2026" },
-    { label: "Price Band", value: "₹140 - ₹147 Per share" },
+    { label: "Price Band", value: "₹140 - ₹147 / share" },
     { label: "Issue Size", value: "₹450.00 Cr" },
     { label: "Lot Size", value: "100 Shares (₹14,700)" },
     { label: "Listing On", value: "BSE & NSE" },
@@ -116,14 +116,6 @@ function renderIpoDetails() {
         <div class="detail-label">${d.label}</div>
         <div class="detail-value ${d.isHighlight ? 'highlight-val' : ''}">${d.value}</div>
       </div>
-    `).join("");
-  }
-
-  // Safely update Highlights list (if element exists)
-  const listContainer = document.getElementById("highlightsList");
-  if (listContainer) {
-    listContainer.innerHTML = (ipo.highlights || []).map(h => `
-      <li>${h}</li>
     `).join("");
   }
 }
